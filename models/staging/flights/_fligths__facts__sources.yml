@@ -1,0 +1,76 @@
+version: 2
+
+sources:
+  - name: demo_src
+    description: Данные из БД авиаперелётов
+    tables:
+    - name: aircrafts
+      description: '{{ doc("aircrafts_description") }}'
+      columns:
+      - name: aircraft_code
+        description: >
+          Код модели самолёта.
+          Состоит из 3 латинских букв.
+        tests:
+        - not_null
+        - unique
+      - name: model 
+        description: Названи модели самолёта
+      - name: "range"
+        description: _Неизвестно_
+    - name: airports
+      description: Информация по аэропортам
+      columns:
+      - name: airport_code
+        description: Код
+      - name: airport_name
+        description: Название
+      - name: city
+        description: Город
+      - name: coordinates
+        description: Кординаты
+      - name: timezone
+        description: Временная зона
+    - name: seats
+      description: Места в самолётах
+      columns:
+      - name: aircraft_code
+        description: Код самолёта
+      - name: seat_no
+        description: Номер места
+      - name: fare_conditions
+        description: Класс места - эконом или бизнес
+    - name: boarding_passes
+      description: >
+        При регистрации на рейс пассажиру выдаётся посадочный талон (boarding_passes), в котором указано место в самолете. 
+        Пассажир может зарегистрироваться только на тот рейс, который есть у него в билете. 
+        Комбинация рейса и места в самолете должна быть уникальной, чтобы не допустить выдачу двух посадочных талонов на одно место.
+      columns:
+      - name: ticket_no
+        description: Номер билета.
+      - name: flight_id 
+        description: Идентификатор перелёта.
+      - name: boarding_no, 
+        description: Неизвестное поле.
+      - name: seat_no
+        description: Номер места.
+    - name: flights
+      freshness:
+            warn_after:
+              count: 600000
+              period: hour
+            error_after:
+              count: 10000
+              period: day
+      loaded_at_field: actual_departure::timestamp
+    - name: ticket_flights
+    - name: tickets
+    - name: bookings
+      description: Информация о дате и размере бронирования перелёта.
+      columns:
+      - name: book_ref
+        description: Неизвестное поле.
+      - name: book_date
+        description: Дата в которую было совершено бронирование.
+      - name: total_amount
+        description: Стоимость бронирования.

@@ -1,9 +1,10 @@
 {{
-    config(
-        materialized = 'view',
+  config(
+    materialized = 'table',
     )
 }}
-select
+
+select 
     flight_id, 
     flight_no, 
     scheduled_departure, 
@@ -15,4 +16,5 @@ select
     actual_departure, 
     actual_arrival
 from
-    {{ ref('stg_booking__flights') }}
+    {{ source('demo_src', 'flights') }}
+    

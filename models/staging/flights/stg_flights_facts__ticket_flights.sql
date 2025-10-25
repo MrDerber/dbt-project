@@ -3,10 +3,12 @@
     materialized = 'table',
     )
 }}
-SELECT 
+
+select 
     ticket_no, 
     flight_id, 
-    fare_conditions,
+    fare_conditions, 
     amount
-FROM 
+from
     {{ source('demo_src', 'ticket_flights') }}
+    
